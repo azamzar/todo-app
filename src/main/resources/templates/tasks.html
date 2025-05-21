@@ -2,12 +2,26 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Gestor de Tareas</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .dark-mode {
+            background-color: #121212 !important;
+            color: white;
+        }
+        .dark-mode .list-group-item {
+            background-color: #1e1e1e;
+            color: white;
+        }
+        .dark-mode .completed {
+            color: #cccccc;
+        }
+    </style>
 </head>
 <body class="container mt-5">
-	<button id="themeToggleBtn" onclick="toggleDarkMode()" class="btn btn-secondary mb-4">
-	    🌙 Modo Oscuro
-	</button>
+    <button id="themeToggleBtn" onclick="toggleDarkMode()" class="btn btn-secondary mb-4">
+        🌙 Modo Oscuro
+    </button>
+
     <h1 class="mb-4">Gestor de Tareas</h1>
 
     <form th:action="@{/tasks}" th:object="${newTask}" method="post" class="d-flex mb-4 gap-2">
@@ -21,47 +35,31 @@
                 <form th:action="@{'/tasks/toggle/' + ${task.id}}" method="post" class="d-inline">
                     <button type="submit" class="btn btn-sm btn-outline-success me-2" th:text="${task.completed} ? '✓' : '⬜'"></button>
                 </form>
-                <span th:text="${task.description}" th:classappend="${task.completed} ? 'text-decoration-line-through text-muted' : ''"></span>
+                <span th:text="${task.description}" th:classappend="${task.completed} ? 'text-decoration-line-through completed' : ''"></span>
             </div>
             <form th:action="@{'/tasks/delete/' + ${task.id}}" method="post" class="d-inline">
                 <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
             </form>
         </li>
     </ul>
-	
-	<script>
-	    const body = document.body;
-	    const items = document.querySelectorAll(".list-group-item");
-	    const btn = document.getElementById("themeToggleBtn");
 
-	    function applyDarkMode(enabled) {
-	        if (enabled) {
-	            body.classList.add("bg-dark", "text-white");
-	            items.forEach(item => item.classList.add("bg-dark", "text-white"));
-	            btn.innerText = "☀️ Modo Claro";
-	        } else {
-	            body.classList.remove("bg-dark", "text-white");
-	            items.forEach(item => item.classList.remove("bg-dark", "text-white"));
-	            btn.innerText = "🌙 Modo Oscuro";
-	        }
-	    }
+    <script>
+        function applyDarkMode(enabled) {
+            const body = document.body;
+            body.classList.toggle("dark-mode", enabled);
+            document.getElementById("themeToggleBtn").innerText = enabled ? "☀️ Modo Claro" : "🌙 Modo Oscuro";
+            localStorage.setItem("darkMode", enabled);
+        }
 
-	    function toggleDarkMode() {
-	        const enabled = !body.classList.contains("bg-dark");
-	        applyDarkMode(enabled);
-	        localStorage.setItem("darkMode", enabled);
-	    }
+        function toggleDarkMode() {
+            const isDark = document.body.classList.contains("dark-mode");
+            applyDarkMode(!isDark);
+        }
 
-	    // Al cargar la página
-	    document.addEventListener("DOMContentLoaded", function () {
-	        const saved = localStorage.getItem("darkMode") === "true";
-	        applyDarkMode(saved);
-	    });
-	</script>
-
-
-
-
+        document.addEventListener("DOMContentLoaded", () => {
+            const saved = localStorage.getItem("darkMode") === "true";
+            applyDarkMode(saved);
+        });
+    </script>
 </body>
-
 </html>
