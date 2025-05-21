@@ -30,24 +30,36 @@
     </ul>
 	
 	<script>
-	    function toggleDarkMode() {
-	        const body = document.body;
-	        const items = document.querySelectorAll(".list-group-item");
-	        const btn = document.getElementById("themeToggleBtn");
+	    const body = document.body;
+	    const items = document.querySelectorAll(".list-group-item");
+	    const btn = document.getElementById("themeToggleBtn");
 
-	        body.classList.toggle("bg-dark");
-	        body.classList.toggle("text-white");
-
-	        items.forEach(item => {
-	            item.classList.toggle("bg-dark");
-	            item.classList.toggle("text-white");
-	        });
-
-	        // Cambiar texto del botón según el modo
-	        const darkMode = body.classList.contains("bg-dark");
-	        btn.innerText = darkMode ? "☀️ Modo Claro" : "🌙 Modo Oscuro";
+	    function applyDarkMode(enabled) {
+	        if (enabled) {
+	            body.classList.add("bg-dark", "text-white");
+	            items.forEach(item => item.classList.add("bg-dark", "text-white"));
+	            btn.innerText = "☀️ Modo Claro";
+	        } else {
+	            body.classList.remove("bg-dark", "text-white");
+	            items.forEach(item => item.classList.remove("bg-dark", "text-white"));
+	            btn.innerText = "🌙 Modo Oscuro";
+	        }
 	    }
+
+	    function toggleDarkMode() {
+	        const enabled = !body.classList.contains("bg-dark");
+	        applyDarkMode(enabled);
+	        localStorage.setItem("darkMode", enabled);
+	    }
+
+	    // Al cargar la página
+	    document.addEventListener("DOMContentLoaded", function () {
+	        const saved = localStorage.getItem("darkMode") === "true";
+	        applyDarkMode(saved);
+	    });
 	</script>
+
+
 
 
 </body>
