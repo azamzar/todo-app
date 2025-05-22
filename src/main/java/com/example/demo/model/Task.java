@@ -2,8 +2,8 @@ package com.example.demo.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
 
 @Entity
 public class Task {
@@ -15,6 +15,8 @@ public class Task {
     private String description;
 
     private boolean completed;
+    
+    private String sessionId;
 
     // Constructores
     public Task() {}
@@ -47,5 +49,13 @@ public class Task {
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+    
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 }
